@@ -298,6 +298,11 @@ void CreateScene() {
 			{ ShaderPartType::Fragment, "shaders/fragment_shaders/terrain_frag.glsl" }
 		});
 
+		Shader::Sptr waterShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
+			{ShaderPartType::Vertex, "shaders/vertex_shaders/water_vert.glsl"},
+			{ShaderPartType::Fragment, "shaders/fragment_shaders/water_frag.glsl"}
+		});
+
 		// Load in the meshes
 		MeshResource::Sptr terrainPlaneMesh = ResourceManager::CreateAsset<MeshResource>("plane.obj");
 
@@ -435,6 +440,13 @@ void CreateScene() {
 			terrainMat->Set("u_Scale", 0.1f);
 			
 			terrainMat->Set("u_heightMapSampler", heightMap);
+		}
+
+		Material::Sptr waterMat = ResourceManager::CreateAsset<Material>(waterShader);
+		{
+			Texture2D::Sptr water = ResourceManager::CreateAsset<Texture2D>("textures/terrain/water.jpg");
+
+			waterMat->Name = "Water";
 		}
 		
 		// Create some lights for our scene
