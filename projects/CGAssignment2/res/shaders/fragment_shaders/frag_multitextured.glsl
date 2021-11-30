@@ -45,14 +45,14 @@ void main() {
 	// This is defined in the fragment file "multiple_point_lights.glsl"
 	vec3 lightAccumulation = CalcAllLightContribution(inWorldPos, normal, u_CamPos.xyz, u_Material.Shininess);
 
-    // By we can use this lil trick to divide our weight by the sum of all components
-    // This will make all of our texture weights add up to one! 
-    vec2 texWeight = inTextureWeights / dot(inTextureWeights, vec2(1,1));
+	// By we can use this lil trick to divide our weight by the sum of all components
+	// This will make all of our texture weights add up to one! 
+	vec2 texWeight = inTextureWeights / dot(inTextureWeights, vec2(1,1));
 
 	// Perform our texture mixing, we'll calculate our albedo as the sum of the texture and it's weight
 	vec4 textureColor = 
-        texture(u_Material.DiffuseA, inUV) * texWeight.x + 
-        texture(u_Material.DiffuseB, inUV) * texWeight.y;
+		texture(u_Material.DiffuseA, inUV) * texWeight.x + 
+		texture(u_Material.DiffuseB, inUV) * texWeight.y;
 
 	// combine for the final result
 	vec3 result = lightAccumulation  * inColor * textureColor.rgb;
