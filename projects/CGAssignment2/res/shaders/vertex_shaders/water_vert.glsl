@@ -20,7 +20,7 @@ void main() {
 	vec3 vert = vertex_pos;
 
 	//sin function for wave 
-	vert.y = (sin(vert.x * 5.0 + (delta/2)) * 0.1) + (sin(vert.z * 5.0 + (delta/2)) * 0.1);
+	vert.z = (sin(vert.x * 5.0 + (delta/2)) * 0.1) + (sin(vert.y * 5.0 + (delta/2)) * 0.1);
 
 	gl_Position = MVP * vec4(vert, 1.0);
 }
