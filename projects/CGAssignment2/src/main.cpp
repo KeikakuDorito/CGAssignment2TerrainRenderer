@@ -286,13 +286,13 @@ void CreateScene() {
 			{ ShaderPartType::Vertex, "shaders/vertex_shaders/basic.glsl" },
 			{ ShaderPartType::Fragment, "shaders/fragment_shaders/frag_tangentspace_normal_maps.glsl" }
 		});
-
+		 
 		// This shader handles our multitexturing example
 		/*Shader::Sptr multiTextureShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
 			{ ShaderPartType::Vertex, "shaders/vertex_shaders/vert_multitextured.glsl" },
 			{ ShaderPartType::Fragment, "shaders/fragment_shaders/frag_multitextured.glsl" }
 		});*/
-
+		
 		Shader::Sptr terrainShader = ResourceManager::CreateAsset<Shader>(std::unordered_map<ShaderPartType, std::string>{
 			{ ShaderPartType::Vertex, "shaders/vertex_shaders/terrain_vert.glsl" },
 			{ ShaderPartType::Fragment, "shaders/fragment_shaders/terrain_frag.glsl" }
@@ -304,7 +304,7 @@ void CreateScene() {
 		});
 
 		// Load in the meshes
-		MeshResource::Sptr terrainPlaneMesh = ResourceManager::CreateAsset<MeshResource>("plane.obj");
+		MeshResource::Sptr planeMesh = ResourceManager::CreateAsset<MeshResource>("plane.obj");
 
 		MeshResource::Sptr monkeyMesh = ResourceManager::CreateAsset<MeshResource>("Monkey.obj");
 
@@ -441,12 +441,14 @@ void CreateScene() {
 			
 			terrainMat->Set("u_heightMapSampler", heightMap);
 		}
-
+		
 		Material::Sptr waterMat = ResourceManager::CreateAsset<Material>(waterShader);
 		{
-			Texture2D::Sptr water = ResourceManager::CreateAsset<Texture2D>("textures/terrain/water.jpg");
+			Texture2D::Sptr water = ResourceManager::CreateAsset<Texture2D>("textures/terrain/water.png");
 
 			waterMat->Name = "Water";
+
+			waterMat->Set("u_WaterDiffuse", water);
 		}
 		
 		// Create some lights for our scene
@@ -462,9 +464,9 @@ void CreateScene() {
 		scene->Lights[2].Color = glm::vec3(1.0f, 0.2f, 0.1f);
 
 		// We'll create a mesh that is a simple plane that we can resize later
-		MeshResource::Sptr planeMesh = ResourceManager::CreateAsset<MeshResource>();
+		/*MeshResource::Sptr planeMesh = ResourceManager::CreateAsset<MeshResource>();
 		planeMesh->AddParam(MeshBuilderParam::CreatePlane(ZERO, UNIT_Z, UNIT_X, glm::vec2(1.0f)));
-		planeMesh->GenerateMesh();
+		planeMesh->GenerateMesh();*/
 
 		MeshResource::Sptr sphere = ResourceManager::CreateAsset<MeshResource>();
 		sphere->AddParam(MeshBuilderParam::CreateIcoSphere(ZERO, ONE, 5));
@@ -490,13 +492,29 @@ void CreateScene() {
 			terrain->SetScale(glm::vec3(10.f));
 
 			RenderComponent::Sptr renderer = terrain->Add<RenderComponent>();
-			renderer->SetMesh(terrainPlaneMesh);
+			renderer->SetMesh(planeMesh);
 			renderer->SetMaterial(terrainMat);
 
 			/*RigidBody::Sptr physics = terrain->Add<RigidBody>(RigidBodyType::Dynamic);
 			physics->AddCollider(ConvexMeshCollider::Create());*/
 
+		 
+		}
+
+		GameObject::Sptr water = scene->CreateGameObject("Water Plane");
+		{
+			// Set position in the scene
+			water->SetPostion(glm::vec3(0.0f, 0.0f, -8.35f));
+			water->SetScale(glm::vec3(10.f));
+
+			RenderComponent::Sptr renderer = water->Add<RenderComponent>();
+			renderer->SetMesh(planeMesh);
+			renderer->SetMaterial(waterMat);
+
+			/*RigidBody::Sptr physics = terrain->Add<RigidBody>(RigidBodyType::Dynamic);
+			physics->AddCollider(ConvexMeshCollider::Create());*/
 			
+
 		}
 
 		//// Set up all our sample objects
@@ -721,6 +739,12 @@ int main() {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+
+
+	//Enable Transparency
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
 	// Structure for our frame-level uniforms, matches layout from
 	// fragments/frame_uniforms.glsl

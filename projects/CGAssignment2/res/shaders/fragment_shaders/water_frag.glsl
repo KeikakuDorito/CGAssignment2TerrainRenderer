@@ -1,12 +1,21 @@
-#version 410
-layout(location=1) in vec4 color;
-layout(location=2) in vec2 texUV;
+#version 440
 
-out vec4 frag_color;
+layout(location = 0) in vec3 inWorldPos;
+layout(location = 1) in vec4 inColor;
+layout(location = 2) in vec3 inNormal;
+layout(location = 3) in vec2 inUV;
 
-uniform sampler2D myTextureSampler;
+
+uniform sampler2D u_WaterDiffuse;
+
+uniform float alpha = 1.0f;
+
+// We output a single color to the color buffer
+layout(location = 0) out vec4 frag_color;
 
 void main() { 
 	
-	frag_color = texture(myTextureSampler, texUV);// * vec4(color, 1.0);
+	vec4 tex = texture(u_WaterDiffuse, inUV);
+
+	frag_color = tex;// * vec4(color, 1.0);
 }

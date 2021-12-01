@@ -1,27 +1,26 @@
 #version 440
 
-layout(location = 0) in vec3 vertex_pos;
-layout(location = 1) in vec4 vertex_color;
-layout(location = 2) in vec2 vertex_uv;
+// Include our common vertex shader attributes and uniforms
+#include "../fragments/vs_common.glsl"
 
-out vec4 color;
-out vec2 texUV;
-
-uniform mat4 MVP;
-
-uniform sampler2D myTextureSampler;
 
 uniform float delta;
 
 void main() {
-	
-	color = vertex_color;
-	texUV = vertex_uv;
-	vec3 vert = vertex_pos;
+	vec3 vert = inPosition;
 
-	//sin function for wave 
-	vert.z = (sin(vert.x * 5.0 + (delta/2)) * 0.1) + (sin(vert.y * 5.0 + (delta/2)) * 0.1);
+	//sin function for wave
+	vert.z = 0.1 * ((sin(vert.x * 5.0 + (u_Time/2)) * 0.1) + (sin(vert.y * 5.0 + (u_Time/2)) * 0.1));
 
-	gl_Position = MVP * vec4(vert, 1.0);
+	gl_Position = u_ModelViewProjection * vec4(vert, 1.0);
+
+	// Pass vertex pos in world space to frag shader
+	outWorldPos = (u_Model * vec4(vert, 1.0)).xyz;
+	// Normals
+	outNormal = mat3(u_NormalMatrix) * inNormal;
+	// Pass our UV coords to the fragment shader
+	outUV = inUV;
+	///////////
+	outColor = inColor;
 }
 

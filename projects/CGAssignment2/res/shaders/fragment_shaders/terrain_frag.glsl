@@ -2,7 +2,7 @@
 
 #include "../fragments/fs_common_inputs.glsl"
 
-layout(location = 5) in vec2 inTextureWeights;
+layout(location = 5) in vec4 inTextureWeights;
 
 // We output a single color to the color buffer
 layout(location = 0) out vec4 frag_color;
@@ -49,12 +49,14 @@ void main() {
 
 	// By we can use this lil trick to divide our weight by the sum of all components
 	// This will make all of our texture weights add up to one! 
-	vec2 texWeight = inTextureWeights / dot(inTextureWeights, vec2(1,1));
+	vec4 texWeight = inTextureWeights / dot(inTextureWeights, vec4(1,1,1,1));
 
 	// Perform our texture mixing, we'll calculate our albedo as the sum of the texture and it's weight
 	vec4 textureColor = 
-		texture(u_Material.DiffuseStone, inUV) * texWeight.x + 
-		texture(u_Material.DiffuseSnow, inUV) * texWeight.y;
+		texture(u_Material.DiffuseSand, inUV) * texWeight.x + 
+		texture(u_Material.DiffuseGrass, inUV) * texWeight.y +
+		texture(u_Material.DiffuseStone, inUV) * texWeight.z +
+		texture(u_Material.DiffuseSnow, inUV) * texWeight.w;
 
 	// combine for the final result
 	vec3 result = lightAccumulation  * inColor * textureColor.rgb;
