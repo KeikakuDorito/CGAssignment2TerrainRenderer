@@ -408,7 +408,7 @@ void CreateScene() {
 			normalmapMat->Set("u_Material.Shininess", 0.5f);
 			normalmapMat->Set("u_Scale", 0.1f);
 		}
-
+		 
 		/*Material::Sptr multiTextureMat = ResourceManager::CreateAsset<Material>(multiTextureShader); 
 		{
 			Texture2D::Sptr sand  = ResourceManager::CreateAsset<Texture2D>("textures/terrain/sand.png");
@@ -420,7 +420,7 @@ void CreateScene() {
 			multiTextureMat->Set("u_Material.Shininess", 0.5f);
 			multiTextureMat->Set("u_Scale", 0.1f); 
 		}*/
-
+		
 		Material::Sptr terrainMat = ResourceManager::CreateAsset<Material>(terrainShader);
 		{
 			
@@ -437,7 +437,7 @@ void CreateScene() {
 			terrainMat->Set("u_Material.DiffuseSnow", snow);
 			terrainMat->Set("u_Material.DiffuseStone", stone);
 			terrainMat->Set("u_Material.Shininess", 0.5f);
-			terrainMat->Set("u_Scale", 0.1f);
+			terrainMat->Set("u_Scale", 3.5f);
 			
 			terrainMat->Set("u_heightMapSampler", heightMap);
 		}
@@ -452,17 +452,11 @@ void CreateScene() {
 		}
 		
 		// Create some lights for our scene
-		scene->Lights.resize(3);
-		scene->Lights[0].Position = glm::vec3(0.0f, 1.0f, 3.0f);
+		scene->Lights.resize(1);
+		scene->Lights[0].Position = glm::vec3(0.0f, 1.0f, 8.3f);
 		scene->Lights[0].Color = glm::vec3(1.0f, 1.0f, 1.0f);
 		scene->Lights[0].Range = 100.0f;
-
-		scene->Lights[1].Position = glm::vec3(1.0f, 0.0f, 3.0f);
-		scene->Lights[1].Color = glm::vec3(0.2f, 0.8f, 0.1f);
-
-		scene->Lights[2].Position = glm::vec3(0.0f, 1.0f, 3.0f);
-		scene->Lights[2].Color = glm::vec3(1.0f, 0.2f, 0.1f);
-
+		
 		// We'll create a mesh that is a simple plane that we can resize later
 		/*MeshResource::Sptr planeMesh = ResourceManager::CreateAsset<MeshResource>();
 		planeMesh->AddParam(MeshBuilderParam::CreatePlane(ZERO, UNIT_Z, UNIT_X, glm::vec2(1.0f)));
@@ -475,7 +469,7 @@ void CreateScene() {
 		// Set up the scene's camera
 		GameObject::Sptr camera = scene->CreateGameObject("Main Camera"); 
 		{
-			camera->SetPostion(glm::vec3(0.0f));
+			camera->SetPostion(glm::vec3(-3.f, 6.0f, 3.f));
 			camera->LookAt(glm::vec3(0.0f));
 
 			camera->Add<SimpleCameraControl>();
@@ -488,7 +482,7 @@ void CreateScene() {
 		GameObject::Sptr terrain = scene->CreateGameObject("Terrain Plane"); 
 		{
 			// Set position in the scene
-			terrain->SetPostion(glm::vec3(0.0f, 0.0f, -10.0f));
+			terrain->SetPostion(glm::vec3(0.0f, 0.0f, -3.5f));
 			terrain->SetScale(glm::vec3(10.f));
 
 			RenderComponent::Sptr renderer = terrain->Add<RenderComponent>();
@@ -504,7 +498,7 @@ void CreateScene() {
 		GameObject::Sptr water = scene->CreateGameObject("Water Plane");
 		{
 			// Set position in the scene
-			water->SetPostion(glm::vec3(0.0f, 0.0f, -8.35f));
+			water->SetPostion(glm::vec3(0.0f, 0.0f, -1.85f));
 			water->SetScale(glm::vec3(10.f));
 
 			RenderComponent::Sptr renderer = water->Add<RenderComponent>();

@@ -5,7 +5,7 @@
 
 #include "../fragments/math_constants.glsl"
 
-layout(location = 5) out vec4 outTexWeights;
+layout(location = 5) out vec3 outTexWeights;
 
 uniform float u_Scale;
 uniform sampler2D u_heightMapSampler;
@@ -29,12 +29,10 @@ void main() {
 	// We have some calculation to determine the texture weights
 	// In this case, we are going to use cos and sin to generate texture
 	// weights based on the z coord of the model in world coords
-	outTexWeights = vec4( //The more the weight the 
-		(sin(outWorldPos.z / u_Scale + M_PI) + 1) / 2, //Sand
-		(sin(outWorldPos.z / u_Scale) + 1) / 2, //Grass
-		(sin(outWorldPos.z / u_Scale + M_PI) + 1) / 2, //Stone
-		(sin(outWorldPos.z / u_Scale) + 1) / 2 //Snow
-		
+	outTexWeights = vec3( //The more the weight the 
+		0.5*cos((u_Scale * outWorldPos.z) / 5) + 0.5, //Sand
+		sin((u_Scale * outWorldPos.z + (1.5 * M_PI))/5) + 1, //Grass
+		sqrt(abs(outWorldPos.z))/7 //Stone
 	);
 }
 
